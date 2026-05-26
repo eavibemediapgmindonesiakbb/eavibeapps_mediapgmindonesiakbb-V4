@@ -1,170 +1,114 @@
-// GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU
-const API_URL = 'https://script.google.com/macros/s/AKfycbx.../exec';
+const API_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_KAMU';
 
-// DOM Elements
-const splash = document.getElementById('splash');
-const loginPage = document.getElementById('login-page');
-const dashboardUser = document.getElementById('dashboard-user');
-const dashboardAdmin = document.getElementById('dashboard-admin');
-const loginForm = document.getElementById('login-form');
-const togglePassword = document.getElementById('toggle-password');
-const toast = document.getElementById('toast');
-const loading = document.getElementById('loading');
-
-// Init App
+// Splash
 window.addEventListener('load', () => {
   setTimeout(() => {
-    splash.style.opacity = '0';
-    setTimeout(() => {
-      splash.classList.add('hidden');
-      checkSession();
-    }, 500);
-  }, 3000);
+    document.getElementById('splash').classList.add('hidden');
+    checkSession();
+  }, 1500);
 });
-
-// Check Session
-function checkSession() {
-  const session = JSON.parse(localStorage.getItem('pgm_session'));
-  if (session && session.status) {
-    redirectDashboard(session);
-  } else {
-    loginPage.classList.remove('hidden');
-  }
-}
 
 // Toggle Password
-togglePassword.addEventListener('click', () => {
+document.getElementById('toggle-password')?.addEventListener('click', function() {
   const passInput = document.getElementById('password');
-  const icon = togglePassword.querySelector('i');
-  if (passInput.type === 'password') {
-    passInput.type = 'text';
-    icon.classList.replace('fa-eye', 'fa-eye-slash');
-  } else {
-    passInput.type = 'password';
-    icon.classList.replace('fa-eye-slash', 'fa-eye');
-  }
+  const icon = this.querySelector('i');
+  passInput.type = passInput.type === 'password'? 'text' : 'password';
+  icon.classList.toggle('fa-eye');
+  icon.classList.toggle('fa-eye-slash');
 });
 
-// Login Submit
-loginForm.addEventListener('submit', async (e) => {
+// Login
+document.getElementById('login-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const nik = document.getElementById('nik').value.trim();
-  const password = document.getElementById('password').value.trim();
-  
-  if (!nik ||!password) {
-    showToast('NIK dan Password wajib diisi', 'error');
-    return;
-  }
-
-  showLoading(true);
+  showLoading();
+  const nik = document.getElementById('nik').value;
+  const password = document.getElementById('password').value;
   
   try {
-    const response = await fetch(API_URL, {
+    const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `action=login&nik=${nik}&password=${password}`
+      body: JSON.stringify({action: 'login', nik, password})
     });
+    const result = await res.json();
+    hideLoading();
     
-    const data = await response.json();
-    showLoading(false);
-    
-    if (data.status) {
-      localStorage.setItem('pgm_session', JSON.stringify(data));
+    if(result.status === 'success') {
+      localStorage.setItem('pgm_user', JSON.stringify(result.data));
       showToast('Login berhasil!', 'success');
-      setTimeout(() => redirectDashboard(data), 500);
+      setTimeout(() => showDashboard(result.data), 500);
     } else {
-      showToast(data.message || 'Login gagal', 'error');
+      showToast(result.message, 'error');
     }
-  } catch (error) {
-    showLoading(false);
-    showToast('Koneksi error. Coba lagi.', 'error');
-    console.error(error);
+  } catch (err) {
+    hideLoading();
+    showToast('Gagal terhubung ke server', 'error');
   }
 });
 
-// Redirect Dashboard
-function redirectDashboard(data) {
-  loginPage.classList.add('hidden');
-  if (data.role === 'admin') {
-    dashboardAdmin.classList.remove('hidden');
-    loadAdminData();
-  } else {
-    dashboardUser.classList.remove('hidden');
-    loadUserData(data);
+function checkSession() {
+  const user = JSON.parse(localStorage.getItem('pgm_user'));
+  if(user) showDashboard(user);
+  else showPage('login-page');
+}
+
+async function showDashboard(user) {
+  showPage('dashboard');
+  
+  // Isi data user
+  document.getElementById('user-name').textContent = user.nama.split(',')[0] + ' 👋';
+  document.getElementById('user-status-iuran').textContent = user.status + ' ✅';
+  
+  // Bedakan menu admin vs user
+  if(user.role === 'admin') {
+    document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
   }
+  
+  // Tombol Download Sertifikat
+  document.getElementById('btn-download').onclick = () => {
+    if(user.linkSertifikat) window.open(user.linkSertifikat, '_blank');
+    else showToast('Sertifikat belum tersedia', 'error');
+  };
+  
+  document.getElementById('btn-kartu').onclick = () => showToast('Fitur kartu anggota segera hadir', 'info');
+  
+  // Load data statistik dari sheet
+  loadDashboardStats();
 }
 
-// Load User Data
-function loadUserData(data) {
-  document.getElementById('user-name').textContent = data.nama + ' 👋';
-  document.getElementById('profile-nama').textContent = data.nama;
-  document.getElementById('profile-nik').textContent = data.nik;
-  document.getElementById('profile-status').textContent = data.status_anggota || 'Aktif';
-}
-
-// Load Admin Data
-async function loadAdminData() {
-  showLoading(true);
+async function loadDashboardStats() {
   try {
-    const response = await fetch(`${API_URL}?action=getAllAnggota`);
-    const data = await response.json();
-    showLoading(false);
-    
-    if (data.status) {
-      document.getElementById('total-anggota').textContent = data.total;
-      document.getElementById('anggota-aktif').textContent = data.aktif;
-      
-      const tbody = document.querySelector('#tabel-anggota tbody');
-      tbody.innerHTML = '';
-      data.anggota.slice(0, 5).forEach(row => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${row.nik}</td>
-            <td>${row.nama}</td>
-            <td>${row.role}</td>
-            <td><span class="badge-active">${row.status}</span></td>
-          </tr>
-        `;
-      });
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({action: 'getDashboardData'})
+    });
+    const result = await res.json();
+    if(result.status === 'success') {
+      const d = result.data;
+      document.getElementById('stat-total').textContent = d.totalAnggota;
+      document.getElementById('stat-aktif').textContent = d.anggotaAktif;
+      document.getElementById('stat-iuran').textContent = 'Rp ' + d.iuranTerkumpul.toLocaleString('id-ID');
+      document.getElementById('stat-download').textContent = d.totalDownload;
     }
-  } catch (error) {
-    showLoading(false);
-    showToast('Gagal load data', 'error');
-  }
+  } catch (err) { console.log('Gagal load statistik'); }
 }
 
 // Logout
-document.querySelectorAll('.logout-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    localStorage.removeItem('pgm_session');
-    dashboardUser.classList.add('hidden');
-    dashboardAdmin.classList.add('hidden');
-    loginPage.classList.remove('hidden');
-    loginForm.reset();
-    showToast('Logout berhasil', 'success');
-  });
+document.getElementById('logout')?.addEventListener('click', () => {
+  localStorage.removeItem('pgm_user');
+  showToast('Logout berhasil', 'success');
+  setTimeout(() => showPage('login-page'), 500);
 });
 
-// Toast
-function showToast(message, type = 'success') {
+// Helper
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+function showToast(message, type = 'info') {
+  const toast = document.getElementById('toast');
   toast.textContent = message;
-  toast.className = `toast ${type}`;
-  toast.classList.remove('hidden');
-  setTimeout(() => toast.classList.add('hidden'), 3000);
+  toast.className = `toast show ${type}`;
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
-
-// Loading
-function showLoading(show) {
-  loading.classList.toggle('hidden',!show);
-}
-
-// Register PWA Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-// Auto update service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(reg => reg.update());
-  });
-}
+function showLoading() { document.getElementById('loading').classList.remove('hidden'); }
+function hideLoading() { document.getElementById('loading').classList.add('hidden'); }
