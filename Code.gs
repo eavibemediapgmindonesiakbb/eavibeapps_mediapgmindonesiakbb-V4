@@ -1,105 +1,69 @@
-// ID Spreadsheet kamu
-const SPREADSHEET_ID = '1ABC...XYZ'; // Ganti dengan ID Spreadsheet
-const SHEET_NAME = 'Anggota';
-
-function doGet(e) {
-  const action = e.parameter.action;
-  
-  if (action === 'getAllAnggota') {
-    return getAllAnggota();
-  }
-  
-  return ContentService.createTextOutput(JSON.stringify({
-    status: false,
-    message: 'Invalid action'
-  })).setMimeType(ContentService.MimeType.JSON);
-}
+const SHEET_ID = '1ECSoiHywcQ5RNauOxQFSX4yGuBivh2xLPMSpARDCkKw';
+const SHEET_NAME = 'data sertifikat';
 
 function doPost(e) {
-  const params = e.parameter;
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+  const data = JSON.parse(e.postData.contents);
   
-  if (params.action === 'login') {
-    return loginUser(params.nik, params.password);
-  }
+  if (data.action === 'login') return handleLogin(data.nik, data.password, sheet);
+  if (data.action === 'getDashboardData') return getDashboardData(sheet);
   
-  return ContentService.createTextOutput(JSON.stringify({
-    status: false,
-    message: 'Invalid action'
-  })).setMimeType(ContentService.MimeType.JSON);
+  return jsonResponse('error', 'Action tidak dikenal');
 }
 
-function loginUser(nik, password) {
-  try {
-    const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
-    const data = sheet.getDataRange().getValues();
-    
-    // Skip header row
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      const rowNik = String(row[0]); // Kolom A: nik
-      const rowNama = row[1]; // Kolom B: nama
-      const rowPass = String(row[2]); // Kolom C: password
-      const rowRole = row[3]; // Kolom D: role
-      const rowStatus = row[4]; // Kolom E: status
+function handleLogin(nik, password, sheet) {
+  const values = sheet.getDataRange().getValues();
+  // Kolom: 0=nik, 1=Bayar, 2=Status, 3=Link Sertifikat, 4=nama, 5=role, 6=keterangan, 7=Password
+  
+  for (let i = 1; i < values.length; i++) {
+    if (values[i][0].toString() === nik) {
+      // Ambil password: kalau kolom H kosong, pakai 6 digit terakhir NIK
+      const passSheet = values[i][7];
+      const passDefault = nik.slice(-6);
+      const passValid = passSheet? passSheet.toString() : passDefault;
       
-      if (rowNik === nik) {
-        if (rowPass!== password) {
-          return jsonResponse({ status: false, message: 'Password salah' });
-        }
-        
-        if (rowStatus.toLowerCase()!== 'aktif') {
-          return jsonResponse({ status: false, message: 'Akun belum aktif' });
-        }
-        
-        return jsonResponse({
-          status: true,
-          role: rowRole,
-          nama: rowNama,
-          nik: rowNik,
-          status_anggota: rowStatus
-        });
+      if (password!== passValid) {
+        return jsonResponse('error', 'Password salah');
       }
-    }
-    
-    return jsonResponse({ status: false, message: 'Data tidak ditemukan' });
-    
-  } catch (error) {
-    return jsonResponse({ status: false, message: 'Error: ' + error.toString() });
-  }
-}
-
-function getAllAnggota() {
-  try {
-    const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
-    const data = sheet.getDataRange().getValues();
-    const anggota = [];
-    let aktifCount = 0;
-    
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      if (row[4].toLowerCase() === 'aktif') aktifCount++;
       
-      anggota.push({
-        nik: row[0],
-        nama: row[1],
-        role: row[3],
-        status: row[4]
-      });
+      if(values[i][2]!== 'Aktif' && values[i][2]!== 'LUNAS') {
+        return jsonResponse('error', 'Akun belum aktif / belum bayar iuran');
+      }
+      
+      const userData = {
+        nik: values[i][0],
+        nama: values[i][4],
+        role: values[i][5],
+        status: values[i][2],
+        bayar: values[i][1],
+        linkSertifikat: values[i][3],
+        keterangan: values[i][6]
+      };
+      return jsonResponse('success', 'Login berhasil', userData);
     }
-    
-    return jsonResponse({
-      status: true,
-      total: anggota.length,
-      aktif: aktifCount,
-      anggota: anggota
-    });
-    
-  } catch (error) {
-    return jsonResponse({ status: false, message: error.toString() });
   }
+  return jsonResponse('error', 'NIK tidak terdaftar');
 }
 
-function jsonResponse(data) {
-  return ContentService.createTextOutput(JSON.stringify(data))
-   .setMimeType(ContentService.MimeType.JSON);
+function getDashboardData(sheet) {
+  const values = sheet.getDataRange().getValues();
+  const data = values.slice(1);
+  
+  const totalAnggota = data.length;
+  const anggotaAktif = data.filter(row => row[2] === 'Aktif' || row[2] === 'LUNAS').length;
+  const iuranTerkumpul = data.reduce((sum, row) => sum + (Number(row[1]) || 0), 0);
+  
+  return jsonResponse('success', 'Data dashboard', {
+    totalAnggota,
+    anggotaAktif,
+    iuranTerkumpul,
+    totalDownload: 23 // ini bisa diisi dari data lain nanti
+  });
+}
+
+function jsonResponse(status, message, data = null) {
+  const res = {status, message};
+  if(data) res.data = data;
+  return ContentService.createTextOutput(JSON.stringify(res))
+ .setMimeType(ContentService.MimeType.JSON);
 }
