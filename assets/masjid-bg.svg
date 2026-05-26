@@ -1,0 +1,26 @@
+<svg width="800" height="300" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 300L800 300L800 200C600 220 400 180 200 200L0 180L0 300Z" fill="#D1FAE5" fill-opacity="0.4"/>
+<path d="M0 300L800 300L800 240C650 260 550 230 400 250L0 220L0 300Z" fill="#A7F3D0" fill-opacity="0.5"/>
+<g transform="translate(550, 80)">
+  <rect x="0" y="80" width="120" height="80" rx="8" fill="#059669"/>
+  <circle cx="60" cy="60" r="50" fill="#059669"/>
+  <circle cx="60" cy="60" r="35" fill="#10B981"/>
+  <rect x="50" y="0" width="20" height="30" fill="#059669"/>
+  <path d="M60 0L65 10L60 8L55 10L60 0Z" fill="#D4AF37"/>
+  <rect x="20" y="120" width="15" height="40" fill="#047857"/>
+  <rect x="85" y="120" width="15" height="40" fill="#047857"/>
+</g>
+<g transform="translate(150, 180) rotate(-10)">
+  <rect x="0" y="0" width="80" height="60" rx="4" fill="white" stroke="#059669" stroke-width="2"/>
+  <line x1="10" y1="15" x2="70" y2="15" stroke="#10B981" stroke-width="1.5"/>
+  <line x1="10" y1="25" x2="70" y2="25" stroke="#10B981" stroke-width="1.5"/>
+  <line x1="10" y1="35" x2="70" y2="35" stroke="#10B981" stroke-width="1.5"/>
+  <line x1="10" y1="45" x2="50" y2="45" stroke="#10B981" stroke-width="1.5"/>
+</g>
+<g transform="translate(250, 190) rotate(8)">
+  <rect x="0" y="0" width="80" height="60" rx="4" fill="white" stroke="#059669" stroke-width="2"/>
+  <line x1="10" y1="15" x2="70" y2="15" stroke="#10B981" stroke-width="1.5"/>
+  <line x1="10" y1="25" x2="70" y2="25" stroke="#10B981" stroke-width="1.5"/>
+  <line x1="10" y1="35" x2="70" y2="35" stroke="#10B981" stroke-width="1.5"/>
+</g>
+</svg>
