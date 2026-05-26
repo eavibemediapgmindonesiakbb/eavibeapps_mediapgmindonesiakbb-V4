@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#059669">
   <title>PGM Indonesia Bandung Barat</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -15,7 +14,7 @@
   <!-- SPLASH SCREEN -->
   <div id="splash" class="splash-screen">
     <div class="splash-content">
-      <img src="assets/logo-pgm.png" alt="Logo PGM" class="splash-logo">?
+      <img src="assets/logo-pgm.png" alt="Logo PGM" class="splash-logo">
       <div class="spinner"></div>
       <p>PGM Indonesia KBB</p>
     </div>
@@ -45,44 +44,22 @@
           
           <div class="input-group">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="password" placeholder="Password: 6 digit terakhir NIK" required>
             <button type="button" id="toggle-password" class="toggle-pass">
               <i class="fa-regular fa-eye"></i>
             </button>
           </div>
           
-          <a href="#" class="forgot-pass">Lupa Password?</a>
-          
           <button type="submit" class="btn-login">
             <i class="fa-solid fa-right-to-bracket"></i> Masuk
           </button>
-          
-          <p class="register-text">Belum punya akun? <a href="#" id="daftar-btn">Daftar Sekarang</a></p>
         </form>
-      </div>
-
-      <div class="features">
-        <div class="feature-item">
-          <i class="fa-solid fa-shield-halved"></i>
-          <h4>Data Aman</h4>
-          <p>Informasi Anda terlindungi</p>
-        </div>
-        <div class="feature-item">
-          <i class="fa-solid fa-bolt"></i>
-          <h4>Mudah & Cepat</h4>
-          <p>Akses sistem lebih mudah</p>
-        </div>
-        <div class="feature-item">
-          <i class="fa-solid fa-circle-check"></i>
-          <h4>Terpercaya</h4>
-          <p>Digunakan oleh ribuan guru madrasah</p>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- DASHBOARD USER -->
-  <div id="dashboard-user" class="page hidden">
+  <!-- DASHBOARD - SESUAI GAMBAR -->
+  <div id="dashboard" class="page hidden">
     <header class="dash-header">
       <div class="dash-title">
         <img src="assets/logo-pgm.png" class="logo-sm">
@@ -92,8 +69,9 @@
         </div>
       </div>
       <div class="dash-profile">
-        <i class="fa-solid fa-bell"></i>
+        <i class="fa-solid fa-bell"><span class="notif-badge">3</span></i>
         <img src="https://i.pravatar.cc/40" class="avatar" alt="User">
+        <i class="fa-solid fa-chevron-down"></i>
       </div>
     </header>
     
@@ -103,67 +81,93 @@
           <p>Assalamu'alaikum,</p>
           <h2 id="user-name">Ahmad 👋</h2>
           <p class="welcome-sub">Selamat datang di Sistem Data Anggota PGM Indonesia KBB</p>
+          <div class="quote-box">
+            <i class="fa-solid fa-quote-left"></i>
+            <p>Bersama PGM, kita bergerak untuk perubahan yang lebih baik.</p>
+          </div>
         </div>
         <img src="assets/masjid-bg.svg" class="masjid-illus">
       </div>
 
-      <div class="profile-card">
-        <h4>Profil Anggota</h4>
-        <div class="profile-row"><span>Nama</span><strong id="profile-nama">-</strong></div>
-        <div class="profile-row"><span>NIK</span><strong id="profile-nik">-</strong></div>
-        <div class="profile-row"><span>Status</span><span class="badge-active" id="profile-status">Aktif</span></div>
-      </div>
-
-      <div class="action-grid">
-        <button class="action-btn"><i class="fa-solid fa-download"></i>Download Sertifikat</button>
-        <button class="action-btn"><i class="fa-solid fa-id-card"></i>Lihat Kartu Anggota</button>
-        <button class="action-btn logout-btn"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
-      </div>
-    </main>
-  </div>
-
-  <!-- DASHBOARD ADMIN -->
-  <div id="dashboard-admin" class="page hidden">
-    <header class="dash-header">
-      <div class="dash-title">
-        <img src="assets/logo-pgm.png" class="logo-sm">
-        <div>
-          <h3>Admin PGM KBB</h3>
-          <p>Dashboard Management</p>
-        </div>
-      </div>
-      <div class="dash-profile">
-        <img src="https://i.pravatar.cc/40" class="avatar" alt="Admin">
-      </div>
-    </header>
-
-    <main class="dash-content">
       <div class="stats-grid">
-        <div class="stat-card"><h3 id="total-anggota">0</h3><p>Total Anggota</p></div>
-        <div class="stat-card"><h3 id="anggota-aktif">0</h3><p>Anggota Aktif</p></div>
-      </div>
-
-      <div class="action-grid">
-        <button class="action-btn"><i class="fa-solid fa-users"></i>Kelola Anggota</button>
-        <button class="action-btn"><i class="fa-solid fa-user-plus"></i>Tambah Anggota</button>
-        <button class="action-btn"><i class="fa-solid fa-certificate"></i>Generate Sertifikat</button>
-        <button class="action-btn"><i class="fa-solid fa-user-gear"></i>Ubah Role</button>
-        <button class="action-btn logout-btn"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
-      </div>
-
-      <div class="table-card">
-        <h4>Data Anggota Terbaru</h4>
-        <div class="table-wrap">
-          <table id="tabel-anggota">
-            <thead><tr><th>NIK</th><th>Nama</th><th>Role</th><th>Status</th></tr></thead>
-            <tbody></tbody>
-          </table>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fa-solid fa-users"></i></div>
+          <p>Total Anggota</p><h3 id="stat-total">0</h3><span>Orang</span><small>Aktif terdaftar</small>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fa-solid fa-user-check"></i></div>
+          <p>Anggota Aktif</p><h3 id="stat-aktif">0</h3><span>Orang</span><small>Aktif & berkontribusi</small>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="fa-solid fa-money-bill"></i></div>
+          <p>Iuran Terkumpul</p><h3 id="stat-iuran">Rp 0</h3><span>&nbsp;</span><small>Total iuran terkumpul</small>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fa-solid fa-download"></i></div>
+          <p>Total Download</p><h3 id="stat-download">23</h3><span>File</span><small>Dokumen tersedia</small>
         </div>
       </div>
+
+      <div class="menu-grid">
+        <button class="menu-item admin-only hidden"><i class="fa-solid fa-user-plus"></i><span>Pendaftaran Anggota</span></button>
+        <button class="menu-item admin-only hidden"><i class="fa-solid fa-address-book"></i><span>Data Anggota</span></button>
+        <button class="menu-item"><i class="fa-solid fa-sack-dollar"></i><span>Iuran Anggota</span></button>
+        <button class="menu-item" id="btn-download"><i class="fa-solid fa-download"></i><span>Download Dokumen</span></button>
+        <button class="menu-item"><i class="fa-solid fa-comments"></i><span>Ruang Chat</span></button>
+      </div>
+
+      <div class="card-section">
+        <div class="section-header">
+          <h4><i class="fa-solid fa-bullhorn"></i> Pengumuman Terbaru</h4>
+          <a href="#">Lihat Semua ></a>
+        </div>
+        <div class="pengumuman-list">
+          <div class="pengumuman-item">
+            <div class="pg-line"></div>
+            <div><h5>Rapat Koordinasi PGM Indonesia KBB</h5><p>Akan dilaksanakan pada tanggal 25 Mei 2025 di Aula Kemenag KBB.</p></div>
+            <span class="pg-date">20 Mei 2025</span>
+          </div>
+          <div class="pengumuman-item">
+            <div class="pg-line"></div>
+            <div><h5>Pembayaran Iuran Bulan Mei 2025</h5><p>Batas akhir pembayaran iuran tanggal 31 Mei 2025.</p></div>
+            <span class="pg-date">18 Mei 2025</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="card-section status-iuran">
+          <div class="si-icon"><i class="fa-solid fa-id-card"></i></div>
+          <div><p>Status Iuran Anda</p><h4 id="user-status-iuran">LUNAS ✅</h4><small>Iuran bulan Mei 2025</small></div>
+          <div class="si-divider"></div>
+          <div><p>Tahun</p><h4>2025</h4><p>Bulan Terakhir</p><h4>Mei</h4></div>
+        </div>
+        <div class="card-section kartu-anggota">
+          <div class="ka-icon"><i class="fa-solid fa-qrcode"></i></div>
+          <div><h4>Kartu Anggota Digital</h4><p>Tampilkan kartu anggota Anda dengan QR Code.</p></div>
+          <button class="btn-kartu" id="btn-kartu"><i class="fa-solid fa-id-card"></i> Lihat Kartu ></button>
+        </div>
+      </div>
+
+      <div class="donasi-card">
+        <div class="donasi-icon"><i class="fa-solid fa-heart"></i></div>
+        <div><h4>Dukung Pengembangan PGM Indonesia KBB</h4><p>Kontribusi Anda sangat berarti untuk kemajuan pendidikan madrasah.</p></div>
+        <button class="btn-donasi">Donasi Sekarang <i class="fa-regular fa-heart"></i></button>
+      </div>
+
+      <button class="logout-btn" id="logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     </main>
+
+    <nav class="bottom-nav">
+      <a class="nav-item active"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+      <a class="nav-item"><i class="fa-solid fa-user"></i><span>Profil</span></a>
+      <a class="nav-item nav-plus"><i class="fa-solid fa-plus"></i></a>
+      <a class="nav-item"><i class="fa-solid fa-bell"></i><span class="nav-badge">3</span><span>Notifikasi</span></a>
+      <a class="nav-item"><i class="fa-solid fa-bars"></i><span>Menu</span></a>
+    </nav>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
+  <!-- TOAST & LOADING -->
   <div id="toast" class="toast hidden"></div>
   <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
 
