@@ -79,13 +79,15 @@ body {
 }
 
 /* LOGIN */
+/* GANTI TOTAL BAGIAN .login-bg JADI INI */
 .login-bg {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: url('./assets/masjid-bg.svg') no-repeat center top;
+  background-size: cover;
+  background-color: #e8f5e8; /* fallback kalau SVG gagal load */
   z-index: -1;
 }
-
 .login-container {
   max-width: 480px;
   margin: 0 auto;
@@ -94,10 +96,15 @@ body {
 
 .login-header {
   text-align: center;
-  color: white;
+  color: #1a5d1a; /* ganti dari white ke ijo tua */
   margin-bottom: 30px;
 }
 
+.login-header h1,
+.login-header .subtitle,
+.login-header .tagline {
+  color: #1a5d1a; /* pastiin semua ijo tua */
+}
 .logo {
   width: 80px;
   height: 80px;
