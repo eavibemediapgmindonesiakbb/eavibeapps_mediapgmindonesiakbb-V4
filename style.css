@@ -83,23 +83,68 @@ body {
 .login-bg {
   position: fixed;
   inset: 0;
-  background-color: #e8f5e8;
-  background-image: url('./assets/masjid-bg.svg');
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  background-size: 100% auto;
+  /* Ini background full: gradasi hijau + efek bukit */
+  background: 
+    linear-gradient(180deg, #0d5c3f 0%, #1a7a5a 25%, #a8e6cf 55%, #e8f5e8 100%);
+  z-index: -2;
+}
+
+/* Ini buat numpangin masjid + buku dari SVG kamu */
+.login-bg::before {
+  content: '';
+  position: absolute;
+  bottom: 35%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  height: 250px;
+  background: url('./assets/masjid-bg.svg') no-repeat center bottom;
+  background-size: contain;
   z-index: -1;
 }
 .login-container {
   max-width: 480px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 220px 20px 40px; /* 220px ini kunci biar card turun */
+  position: relative;
+  z-index: 1;
 }
 
 .login-header {
   text-align: center;
-  color: #1a5d1a; /* tambah ini, tadinya putih */
-  margin-bottom: 30px;
+  color: #0d5c3f; /* ijo tua */
+  margin-bottom: 20px;
+}
+
+.login-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: #0d5c3f;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 15px;
+  color: #1a5d1a;
+}
+
+.tagline {
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.95;
+  color: #1a5d1a;
+}
+
+.divider-gold {
+  width: 60px;
+  height: 3px;
+  background: #f59e0b;
+  margin: 15px auto;
+  border-radius: 2px;
 }
 
 .login-header h1,
