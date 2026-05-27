@@ -1,7 +1,7 @@
 // ===================================
 // CONFIG
 // ===================================
-const API_URL = 'https://eavibemediapgmindonesiakbb.github.io/eavibeapps_mediapgmindonesiakbb-V4/';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzA2FKI1fAKfAo7-03ejcTIUu6Ht3QzHRsuy-ijmr0XEhb8z6D6bAPxydVQ0uIZIkJ4JA/exec';
 
 // ===================================
 // SPLASH & INIT
