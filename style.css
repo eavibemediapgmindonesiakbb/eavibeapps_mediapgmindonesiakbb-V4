@@ -94,7 +94,7 @@ body {
   transform: translateX(-50%);
   width: 90%;
   max-width: 500px;
-  height: 250px;
+  height: 300px;
   background: url('./assets/masjid-bg.svg') no-repeat center bottom;
   background-size: contain;
   z-index: -1;
@@ -103,7 +103,7 @@ body {
 .login-container {
   max-width: 480px;
   margin: 0 auto;
-  padding: 220px 20px 40px;
+  padding: 260px 20px 40px;
   position: relative;
   z-index: 1;
 }
