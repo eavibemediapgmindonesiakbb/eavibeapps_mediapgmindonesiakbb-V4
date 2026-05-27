@@ -1,35 +1,36 @@
 /* HAPUS .login-bg dan .login-bg::before YANG LAMA */
 
-/* LOGIN - VERSI BERSATU IKUT SCROLL */
+/* LOGIN - VERSI FINAL BENERAN BERSATU */
 #login-page {
   min-height: 100vh;
-  /* Ini background full: gradasi + masjid langsung nyatu */
+  /* Gradasi + bukit + masjid + buku jadi 1 background */
   background: 
-    url('./assets/masjid-bg.svg') no-repeat center 45%,
-    linear-gradient(180deg, #0d5c3f 0%, #1a7a5a 25%, #a8e6cf 55%, #e8f5e8 100%);
+    url('./assets/masjid-bg.svg') no-repeat center 65%,
+    linear-gradient(180deg, #0d5c3f 0%, #1a7a5a 20%, #a8e6cf 50%, #e8f5e8 100%);
   background-size: 
-    90% auto, /* ukuran masjid */
-    100% 100%; /* ukuran gradasi full */
-  padding: 40px 20px;
+    85% auto, 
+    100% 100%;
+  padding: 30px 20px 40px;
+  position: relative;
+}
+
+.login-bg {
+  display: none !important; /* matiin total biang keroknya */
 }
 
 .login-container {
   max-width: 480px;
   margin: 0 auto;
-  padding-top: 120px; /* atur jarak dari atas biar pas di bawah masjid */
   position: relative;
-  z-index: 1;
-}
-
-/* Hapus div .login-bg di HTML, udah gak kepake */
-.login-bg {
-  display: none; /* matiin aja sekalian */
+  z-index: 2; /* pastiin di atas background */
 }
 
 .login-header {
   text-align: center;
   color: #0d5c3f;
-  margin-bottom: 20px;
+  padding-bottom: 140px; /* jarak kosong buat masjid nongol */
+  position: relative;
+  z-index: 2;
 }
 
 .logo {
@@ -72,6 +73,19 @@
   background: white;
   border-radius: 20px;
   padding: 30px 25px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
   margin-bottom: 30px;
+  position: relative;
+  z-index: 3; /* paling atas, nutupin masjid dikit */
+}
+
+/* HP */
+@media (max-width: 768px) {
+  #login-page {
+    background-size: 95% auto, 100% 100%;
+    background-position: center 60%, center;
+  }
+  .login-header {
+    padding-bottom: 120px;
+  }
 }
