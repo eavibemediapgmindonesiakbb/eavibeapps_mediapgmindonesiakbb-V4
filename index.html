@@ -1,159 +1,32 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PGM Indonesia KBB</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Tes Login Apps Script</title>
+</head>
+<body>
+  <h2>Tes Koneksi ke Apps Script</h2>
+  <button onclick="tesLogin()">Klik Buat Tes Login</button>
+  <h3>Hasil:</h3>
+  <pre id="hasil">Belum di tes...</pre>
+
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) registration.unregister();
+    function tesLogin() {
+      document.getElementById('hasil').textContent = 'Lagi loading...';
+      
+      fetch('https://script.google.com/macros/s/AKfycbyJDyDWkjYwvSd7PgTwqdIrhC5J1zYa-2pv0ivCFxATXgVQWyE2C4Zk33ZMt-o0jrxrTg/exec', {
+        method: 'POST',
+        redirect: 'follow',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({nik: '3217090802760018'})
+      })
+      .then(r => r.text())
+      .then(data => {
+        document.getElementById('hasil').textContent = data;
+      })
+      .catch(err => {
+        document.getElementById('hasil').textContent = 'ERROR: ' + err;
       });
     }
   </script>
-</head>
-<body>
-
-  <!-- HALAMAN LOGIN -->
-  <main id="login-page" class="page">
-    <div class="login-container">
-      <div class="login-box">
-        <div class="login-header">
-          <img src="logo.png" alt="Logo PGM" class="logo">
-          <h2>PGM Indonesia KBB</h2>
-          <p>Sistem Data Anggota & Sertifikat</p>
-        </div>
-        <form id="login-form">
-          <div class="input-group">
-            <i class="fa-solid fa-id-card"></i>
-            <input type="text" id="nik" placeholder="Masukkan NIK" required>
-          </div>
-          <div class="input-group">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" id="password" placeholder="Masukkan Password" required>
-          </div>
-          <button type="submit" id="login-button">Login</button>
-          <p id="login-message" class="error-text"></p>
-        </form>
-        <div class="login-footer">
-          <p>Belum terdaftar? Hubungi Admin PGM KBB</p>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- HALAMAN DASHBOARD -->
-  <div id="dashboard-page" class="page hidden">
-    <header class="dash-header">
-      <div class="header-content">
-        <div class="header-logo">
-          <img src="logo.png" alt="Logo" class="logo-dash">
-          <span>PGM KBB</span>
-        </div>
-        <div class="header-user">
-          <i class="fa-solid fa-bell"></i>
-          <i id="btn-logout" class="fa-solid fa-right-from-bracket"></i>
-        </div>
-      </div>
-    </header>
-
-    <main class="dash-main">
-      <section class="welcome-card">
-        <p>Assalamu'alaikum,</p>
-        <h2 id="user-name">User 👋</h2>
-        <p class="welcome-sub">Selamat datang di Sistem Data Anggota PGM Indonesia KBB</p>
-        <div class="quote-box">
-          <i class="fa-solid fa-quote-left"></i>
-          <span>Bersama PGM, kita bergerak untuk perubahan yang lebih baik.</span>
-        </div>
-        <div class="status-pills">
-          <span id="status-iuran-badge" class="status-badge">Bayar: -</span>
-          <span id="user-status-iuran" class="status-badge">Status: -</span>
-        </div>
-      </section>
-
-      <section class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon bg-blue"><i class="fa-solid fa-users"></i></div>
-          <p id="stat-total" class="stat-value">0</p>
-          <p class="stat-label">Total Anggota</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon bg-green"><i class="fa-solid fa-user-check"></i></div>
-          <p id="stat-aktif" class="stat-value">0</p>
-          <p class="stat-label">Tervalidasi</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon bg-orange"><i class="fa-solid fa-money-bill-wave"></i></div>
-          <p id="stat-iuran" class="stat-value">0</p>
-          <p class="stat-label">Sudah Bayar</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon bg-purple"><i class="fa-solid fa-clock"></i></div>
-          <p id="stat-download" class="stat-value">0</p>
-          <p class="stat-label">Menunggu</p>
-        </div>
-      </section>
-
-      <section class="action-card">
-        <button id="btn-download" class="btn-main" disabled>
-          <i class="fa-solid fa-ban"></i> Sertifikat Belum Tersedia
-        </button>
-        <p class="action-desc">Sertifikat bisa didownload setelah admin memvalidasi pembayaran Anda.</p>
-      </section>
-
-      <section class="menu-grid">
-        <div class="menu-item admin-only hidden" id="menu-data-anggota">
-          <i class="fa-solid fa-address-book"></i>
-          <span>Data Anggota</span>
-        </div>
-        <div class="menu-item">
-          <i class="fa-solid fa-circle-info"></i>
-          <span>Info Kegiatan</span>
-        </div>
-        <div class="menu-item">
-          <i class="fa-solid fa-comments"></i>
-          <span>Ruang Chat</span>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- HALAMAN DATA ANGGOTA - ADMIN -->
-  <div id="data-anggota-page" class="page hidden">
-    <header class="dash-header">
-      <div class="header-content">
-        <div class="header-logo">
-          <i class="fa-solid fa-arrow-left" id="btn-back-dashboard"></i>
-          <span>Data Anggota</span>
-        </div>
-      </div>
-    </header>
-    <main class="dash-main">
-      <section class="dash-card">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>NIK</th>
-                <th>Nama</th>
-                <th>Bayar</th>
-                <th>Status</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="tabel-anggota">
-              <tr><td colspan="5">Loading...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
