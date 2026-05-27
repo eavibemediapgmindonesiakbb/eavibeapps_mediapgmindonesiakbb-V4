@@ -1,5 +1,29 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbzA2FKI1fAKfAo7-03ejcTIUu6Ht3QzHRsuy-ijmr0XEhb8z6D6bAPxydVQ0uIZIkJ4JA/exec';
 
+// Splash screen
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hidden');
+    document.getElementById('login-page').classList.remove('hidden');
+  }, 2000);
+});
+
+// Toggle password
+document.getElementById('toggle-password').addEventListener('click', function() {
+  const passInput = document.getElementById('password');
+  const icon = this.querySelector('i');
+  if (passInput.type === 'password') {
+    passInput.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    passInput.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+});
+
+// Login
 document.getElementById('login-form').addEventListener('submit', function(e) {
   e.preventDefault();
 
@@ -14,11 +38,10 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
   }
 
   btn.disabled = true;
-  btn.textContent = 'Memproses...';
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
   msg.textContent = '';
 
-  // Pake JSONP trick biar lolos CORS
-  const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+  const callbackName = 'cb_' + Date.now();
   const script = document.createElement('script');
 
   window[callbackName] = function(result) {
@@ -27,16 +50,14 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
 
     if (result.status === 'success') {
       document.getElementById('login-page').classList.add('hidden');
-      document.getElementById('dashboard-page').classList.remove('hidden');
+      document.getElementById('dashboard-user').classList.remove('hidden');
 
       const user = result.data;
       document.getElementById('user-name').textContent = user.nama.split(',')[0] + ' 👋';
-
-      const badgeBayar = document.getElementById('status-iuran-badge');
-      badgeBayar.textContent = 'Bayar: ' + (user.bayar || 'Belum');
-      badgeBayar.className = 'status-badge ' + (user.bayar === 'sudah'? 'lunas' : 'belum');
-
-      document.getElementById('user-status-iuran').textContent = 'Status: ' + (user.status || '-');
+      document.getElementById('profile-nama').textContent = user.nama;
+      document.getElementById('profile-nik').textContent = nik;
+      document.getElementById('profile-status').textContent = user.status || 'Aktif';
+      document.getElementById('profile-bayar').textContent = user.bayar || 'Belum';
 
       const btnDownload = document.getElementById('btn-download');
       if ((user.status === 'Valid' || user.status === 'Aktif') && user.linkSertifikat) {
@@ -52,24 +73,28 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
     }
 
     btn.disabled = false;
-    btn.textContent = 'Login';
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Masuk';
   };
 
-  script.src = API_URL + '?callback=' + callbackName + '&nik=' + encodeURIComponent(nik) + '&password=' + encodeURIComponent(password);
   script.onerror = function() {
     msg.textContent = 'Gagal konek ke server';
     btn.disabled = false;
-    btn.textContent = 'Login';
+    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Masuk';
     delete window[callbackName];
     document.body.removeChild(script);
   };
 
+  script.src = API_URL + '?callback=' + callbackName + '&nik=' + encodeURIComponent(nik) + '&password=' + encodeURIComponent(password);
   document.body.appendChild(script);
 });
 
-document.getElementById('btn-logout').addEventListener('click', () => {
-  document.getElementById('dashboard-page').classList.add('hidden');
-  document.getElementById('login-page').classList.remove('hidden');
-  document.getElementById('login-form').reset();
-  document.getElementById('login-message').textContent = '';
+// Logout
+document.querySelectorAll('.logout-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('dashboard-user').classList.add('hidden');
+    document.getElementById('dashboard-admin').classList.add('hidden');
+    document.getElementById('login-page').classList.remove('hidden');
+    document.getElementById('login-form').reset();
+    document.getElementById('login-message').textContent = '';
+  });
 });
