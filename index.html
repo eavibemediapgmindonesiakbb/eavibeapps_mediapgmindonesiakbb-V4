@@ -3,42 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Data Anggota PGM Indonesia KBB</title>
+  <title>PGM Indonesia KBB</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) registration.unregister();
+      });
+    }
+  </script>
 </head>
 <body>
 
   <!-- HALAMAN LOGIN -->
-  <main id="login-page" class="login-container">
-    <div class="login-box">
-      <div class="login-header">
-        <img src="logo.png" alt="Logo PGM" class="logo">
-        <h2>PGM Indonesia KBB</h2>
-        <p>Sistem Data Anggota & Sertifikat</p>
-      </div>
-      <form id="login-form">
-        <div class="input-group">
-          <i class="fa-solid fa-id-card"></i>
-          <input type="text" id="nik" placeholder="Masukkan NIK" required>
+  <main id="login-page" class="page">
+    <div class="login-container">
+      <div class="login-box">
+        <div class="login-header">
+          <img src="logo.png" alt="Logo PGM" class="logo">
+          <h2>PGM Indonesia KBB</h2>
+          <p>Sistem Data Anggota & Sertifikat</p>
         </div>
-        <div class="input-group">
-          <i class="fa-solid fa-lock"></i>
-          <input type="password" id="password" placeholder="Masukkan Password" required>
+        <form id="login-form">
+          <div class="input-group">
+            <i class="fa-solid fa-id-card"></i>
+            <input type="text" id="nik" placeholder="Masukkan NIK" required>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="password" placeholder="Masukkan Password" required>
+          </div>
+          <button type="submit" id="login-button">Login</button>
+          <p id="login-message" class="error-text"></p>
+        </form>
+        <div class="login-footer">
+          <p>Belum terdaftar? Hubungi Admin PGM KBB</p>
         </div>
-        <button type="submit" id="login-button">Login</button>
-        <p id="error-message" class="error-text"></p>
-      </form>
-      <div class="login-footer">
-        <p>Belum terdaftar? Hubungi Admin PGM KBB</p>
       </div>
     </div>
   </main>
 
   <!-- HALAMAN DASHBOARD -->
-  <div id="dashboard-page" class="hidden">
-    <!-- HEADER -->
+  <div id="dashboard-page" class="page hidden">
     <header class="dash-header">
       <div class="header-content">
         <div class="header-logo">
@@ -47,13 +55,12 @@
         </div>
         <div class="header-user">
           <i class="fa-solid fa-bell"></i>
-          <i id="logout-button" class="fa-solid fa-right-from-bracket"></i>
+          <i id="btn-logout" class="fa-solid fa-right-from-bracket"></i>
         </div>
       </div>
     </header>
 
     <main class="dash-main">
-      <!-- SAPAAN USER -->
       <section class="welcome-card">
         <p>Assalamu'alaikum,</p>
         <h2 id="user-name">User 👋</h2>
@@ -68,7 +75,6 @@
         </div>
       </section>
 
-      <!-- STATISTIK -->
       <section class="stats-grid">
         <div class="stat-card">
           <div class="stat-icon bg-blue"><i class="fa-solid fa-users"></i></div>
@@ -82,17 +88,16 @@
         </div>
         <div class="stat-card">
           <div class="stat-icon bg-orange"><i class="fa-solid fa-money-bill-wave"></i></div>
-          <p id="stat-iuran" class="stat-value">0 orang</p>
+          <p id="stat-iuran" class="stat-value">0</p>
           <p class="stat-label">Sudah Bayar</p>
         </div>
         <div class="stat-card">
           <div class="stat-icon bg-purple"><i class="fa-solid fa-clock"></i></div>
           <p id="stat-download" class="stat-value">0</p>
-          <p class="stat-label">Menunggu Validasi</p>
+          <p class="stat-label">Menunggu</p>
         </div>
       </section>
 
-      <!-- TOMBOL DOWNLOAD SERTIFIKAT -->
       <section class="action-card">
         <button id="btn-download" class="btn-main" disabled>
           <i class="fa-solid fa-ban"></i> Sertifikat Belum Tersedia
@@ -100,12 +105,7 @@
         <p class="action-desc">Sertifikat bisa didownload setelah admin memvalidasi pembayaran Anda.</p>
       </section>
 
-      <!-- MENU UTAMA -->
       <section class="menu-grid">
-        <div class="menu-item admin-only hidden" id="menu-pendaftaran">
-          <i class="fa-solid fa-user-plus"></i>
-          <span>Pendaftaran Anggota</span>
-        </div>
         <div class="menu-item admin-only hidden" id="menu-data-anggota">
           <i class="fa-solid fa-address-book"></i>
           <span>Data Anggota</span>
@@ -119,24 +119,36 @@
           <span>Ruang Chat</span>
         </div>
       </section>
+    </main>
+  </div>
 
-      <!-- PENGUMUMAN -->
-      <section class="announcement-card">
-        <div class="announcement-header">
-          <h3><i class="fa-solid fa-bullhorn"></i> Pengumuman Terbaru</h3>
-          <a href="#">Lihat Semua ></a>
+  <!-- HALAMAN DATA ANGGOTA - ADMIN -->
+  <div id="data-anggota-page" class="page hidden">
+    <header class="dash-header">
+      <div class="header-content">
+        <div class="header-logo">
+          <i class="fa-solid fa-arrow-left" id="btn-back-dashboard"></i>
+          <span>Data Anggota</span>
         </div>
-        <div class="announcement-list">
-          <div class="announcement-item">
-            <p class="ann-title">Rapat Koordinasi PGM Indonesia KBB</p>
-            <p class="ann-desc">Akan dilaksanakan pada tanggal 25 Mei 2025 di Aula Kemenag KBB.</p>
-            <span class="ann-date">20 Mei 2025</span>
-          </div>
-          <div class="announcement-item">
-            <p class="ann-title">Pembayaran Iuran Bulan Mei 2025</p>
-            <p class="ann-desc">Batas akhir pembayaran tanggal 31 Mei 2025.</p>
-            <span class="ann-date">18 Mei 2025</span>
-          </div>
+      </div>
+    </header>
+    <main class="dash-main">
+      <section class="dash-card">
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>Bayar</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tabel-anggota">
+              <tr><td colspan="5">Loading...</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
     </main>
