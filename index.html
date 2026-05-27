@@ -15,7 +15,7 @@
   <!-- SPLASH SCREEN -->
   <div id="splash" class="splash-screen">
     <div class="splash-content">
-      <img src="assets/logo-pgm.png" alt="Logo PGM" class="splash-logo">?
+      <img src="assets/logo-pgm.png" alt="Logo PGM" class="splash-logo">
       <div class="spinner"></div>
       <p>PGM Indonesia KBB</p>
     </div>
@@ -53,7 +53,9 @@
           
           <a href="#" class="forgot-pass">Lupa Password?</a>
           
-          <button type="submit" class="btn-login">
+          <div id="login-message" class="error-msg"></div>
+          
+          <button type="submit" id="login-button" class="btn-login">
             <i class="fa-solid fa-right-to-bracket"></i> Masuk
           </button>
           
@@ -101,7 +103,7 @@
       <div class="welcome-card">
         <div>
           <p>Assalamu'alaikum,</p>
-          <h2 id="user-name">Ahmad 👋</h2>
+          <h2 id="user-name">User 👋</h2>
           <p class="welcome-sub">Selamat datang di Sistem Data Anggota PGM Indonesia KBB</p>
         </div>
         <img src="assets/masjid-bg.svg" class="masjid-illus">
@@ -111,11 +113,12 @@
         <h4>Profil Anggota</h4>
         <div class="profile-row"><span>Nama</span><strong id="profile-nama">-</strong></div>
         <div class="profile-row"><span>NIK</span><strong id="profile-nik">-</strong></div>
-        <div class="profile-row"><span>Status</span><span class="badge-active" id="profile-status">Aktif</span></div>
+        <div class="profile-row"><span>Status</span><span class="badge-active" id="profile-status">-</span></div>
+        <div class="profile-row"><span>Iuran</span><span class="badge" id="profile-bayar">-</span></div>
       </div>
 
       <div class="action-grid">
-        <button class="action-btn"><i class="fa-solid fa-download"></i>Download Sertifikat</button>
+        <button id="btn-download" class="action-btn" disabled><i class="fa-solid fa-ban"></i>Menunggu Validasi</button>
         <button class="action-btn"><i class="fa-solid fa-id-card"></i>Lihat Kartu Anggota</button>
         <button class="action-btn logout-btn"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
       </div>
@@ -167,6 +170,6 @@
   <div id="toast" class="toast hidden"></div>
   <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20260527"></script>
 </body>
 </html>
