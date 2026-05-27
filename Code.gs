@@ -1,8 +1,9 @@
 const SHEET_ID = '1ECSoiHywcQ5RNauOxQFSX4yGuBivh2xLPMSpARDCkKw';
 const SHEET_NAME = 'data sertifikat';
 
+// WAJIB ADA BIAR URL /exec NGGAK ERROR
 function doGet() {
-  return ContentService.createTextOutput('PGM Indonesia KBB API Aktif');
+  return ContentService.createTextOutput('eavibeapps_mediapgmindonesiakbb-V4 API Aktif');
 }
 
 function doPost(e) {
@@ -13,7 +14,6 @@ function doPost(e) {
 
     if (action === 'login') return handleLogin(data.nik, data.password, sheet);
     if (action === 'getAllAnggota') return getAllAnggota(sheet);
-    if (action === 'updateStatus') return updateStatus(data.nik, data.status, data.link, sheet);
 
     return outputJSON({status: 'error', message: 'Action tidak dikenal'});
   } catch(err) {
@@ -32,14 +32,19 @@ function handleLogin(nik, password, sheet) {
       if (!passDiSheet) {
         return outputJSON({status: 'error', message: 'Password belum diset admin'});
       }
+
       if (password!== passDiSheet) {
         return outputJSON({status: 'error', message: 'Password salah'});
       }
 
+      if(values[i][2]!== 'Aktif' && values[i][2]!== 'LUNAS') {
+        return outputJSON({status: 'error', message: 'Akun belum aktif'});
+      }
+
       const userData = {
         nik: values[i][0],
-        bayar: values[i][1], // sudah / belum
-        status: values[i][2], // Menunggu / Valid
+        bayar: values[i][1],
+        status: values[i][2],
         linkSertifikat: values[i][3],
         nama: values[i][4],
         role: values[i][5],
@@ -64,19 +69,7 @@ function getAllAnggota(sheet) {
   return outputJSON({status: 'success', data: data});
 }
 
-function updateStatus(nik, statusBaru, linkBaru, sheet) {
-  const values = sheet.getDataRange().getValues();
-  for (let i = 1; i < values.length; i++) {
-    if (values[i][0].toString() === nik.toString()) {
-      sheet.getRange(i+1, 3).setValue(statusBaru); // kolom C = Status
-      if(linkBaru) sheet.getRange(i+1, 4).setValue(linkBaru); // kolom D = Link Sertifikat
-      return outputJSON({status: 'success', message: 'Status diupdate'});
-    }
-  }
-  return outputJSON({status: 'error', message: 'NIK tidak ditemukan'});
-}
-
 function outputJSON(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
-.setMimeType(ContentService.MimeType.JSON);
+ .setMimeType(ContentService.MimeType.JSON);
 }
